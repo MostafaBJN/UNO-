@@ -5,16 +5,14 @@ import java.util.ArrayList;
  *
  */
 public class Table {
-    private int numberOfPlayers;
     private ArrayList<Player> players;
     private ArrayList<Card> cards;
     private Card middleCard;
 
-    public Table (int numberOfPlayers){
-        this.numberOfPlayers = numberOfPlayers;
+    public Table (){
         cards = new ArrayList<Card>();
         players = new ArrayList<Player>();
-        for (int i = 0; i < numberOfPlayers; i++)
+        for (int i = 0; i < Run.numberOfPlayers; i++)
             players.add(new Player(i));
         for (int i = 1; i < 20; i++)
             cards.add(new NumberCard(Color.blue,(i/2)));
@@ -55,18 +53,25 @@ public class Table {
     }
 
     public void print() {
-        //
+        System.out.println("Middle Card");
         System.out.println(middleCard.getDesign());
+        System.out.println("-------------------");
         int i = 1;
         for (Player player:players) {
-            System.out.println("Player " + i);
+            System.out.println("Player " + i++);
             for (Card card : player.getCards()) {
-                System.out.println("" + card.getSign() + " " + card.getColor());
                 System.out.println(card.getDesign());
-                i++;
             }
             System.out.println();
-            System.out.println();
+
+        }
+    }
+
+    public void printPlayer(Player player){
+        int i = 1;
+        for (Card card : player.getCards()) {
+            System.out.println(i++ + ")");
+            System.out.println(card.getDesign());
         }
     }
 

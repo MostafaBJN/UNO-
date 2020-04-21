@@ -1,6 +1,7 @@
 public class ReverserCard extends Card {
 
     public ReverserCard (Color color){
+        super(color, Sign.reverser);
         super.point = 20;
         super.color = color;
         super.sign = Sign.reverser;

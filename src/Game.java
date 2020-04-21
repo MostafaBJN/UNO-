@@ -13,7 +13,7 @@ public class Game {
      * Star a new Game
      */
     public Game(int numberOfPlayers) {
-        table = new Table(numberOfPlayers);
+        table = new Table();
         divideCards();
     }
 
@@ -26,12 +26,18 @@ public class Game {
      */
     public boolean putCard(Card cardToPut, Player putterPlayer) {
         if(checkPuttedCard(cardToPut, putterPlayer)) {
+            cardToPut.ability();
+            if(table.getMiddleCard().getSign() == Sign.wildColor || table.getMiddleCard().getSign() == Sign.wildDraw)
+                table.getMiddleCard().design = table.getMiddleCard().colorToPaint(table.getMiddleCard().getColor()) +  Card.BORDER + "\n" + table.getMiddleCard().signToShape(table.getMiddleCard().getSign()) + "\n" + Card.BORDER + Card.RESET;;
             table.getCards().add(table.getMiddleCard());
             table.setMiddleCard(cardToPut);
+            putterPlayer.getCards().remove(cardToPut);
             return true;
         }
-        else
+        else {
+            System.out.println("You Can't Put This Card");
             return false;
+        }
 
     }
 
@@ -106,6 +112,7 @@ public class Game {
             middleCard = selectRandomCard(table.getCards());
         } while(!checkFirstMiddleCard(middleCard));
         table.setMiddleCard(middleCard);
+        middleCard.ability();
     }
 
     /**

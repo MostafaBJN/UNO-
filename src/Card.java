@@ -1,3 +1,4 @@
+import java.util.Objects;
 
 public abstract class Card {
     public static final String BLUE = "\u001B[34m";
@@ -18,33 +19,12 @@ public abstract class Card {
     protected Sign sign;
     protected String design;
 
-    public abstract void ability ();
-
-    protected Sign numberFinder(int number) {
-        switch (number){
-            case 0:
-                return Sign.zero;
-            case 1:
-                return Sign.one;
-            case 2:
-                return Sign.two;
-            case 3:
-                return Sign.three;
-            case 4:
-                return Sign.four;
-            case 5:
-                return Sign.five;
-            case 6:
-                return Sign.six;
-            case 7:
-                return Sign.seven;
-            case 8:
-                return Sign.eight;
-            case 9:
-                return Sign.nine;
-        }
-        return null;
+    public Card(Color color, Sign sign){
+        this.color = color;
+        this.sign = sign;
     }
+
+    public abstract void ability ();
 
     protected String colorToPaint(Color color){
         switch (color){
@@ -57,7 +37,7 @@ public abstract class Card {
         return RESET;
     }
 
-    protected void setColorOfWildCard() {
+    protected void setColorOfWildCard(Sign wildSign) {
         System.out.println("Select Color Of Card");
         System.out.println("1)Blue");
         System.out.println("2)Green");
@@ -77,14 +57,23 @@ public abstract class Card {
                 color = Color.yellow;
                 break;
         }
+        design = colorToPaint(color) + BORDER + "\n" + signToShape(wildSign) + "\n" + BORDER + RESET;
     }
 
-    protected void drawCardsForNextPLayer(int numberOfCards) {
-        int nextPlayer = (Run.player_turn + Run.rotateDirection) % Run.numberOfPlayers;
-        System.out.println("! Player " + (nextPlayer + 1) + ", You Have to Get " + numberOfCards + " Cards !");
-        for (int i = 0; i < numberOfCards; i++) {
-            Run.game.takeCard(Run.game.getTable().getPlayers().get(nextPlayer));
+    protected String signToShape(Sign sign) {
+        switch (sign){
+            case wildDraw:
+                return WILD_DRAW_CARD;
+            case wildColor:
+                return WILD_CARD;
         }
+        return null;
+    }
+
+    public void drawCardsForPlayer(int numberOfCards, Player playerToGetCards) {
+        System.out.println("! Player " + (playerToGetCards.getNumber() + 1) + ", You Have to Get " + numberOfCards + " Cards !");
+        for (int i = 0; i < numberOfCards; i++)
+            Run.game.takeCard(playerToGetCards);
     }
 
     protected boolean checkNextPlayerHasSign(int playerTurn, Sign sign) {
@@ -94,6 +83,20 @@ public abstract class Card {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Card)) return false;
+        Card card = (Card) o;
+        return color == card.color &&
+                sign == card.sign;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(color, sign);
     }
 
     public int getPoint() {
