@@ -2,10 +2,9 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- *
+ * UNO Game
  */
 public class Game {
-    //Max Players = 15
     private static final int numberOfCardsForEachPlayer = 7;
     private Table table;
 
@@ -35,7 +34,9 @@ public class Game {
             return true;
         }
         else {
-            System.out.println("You Can't Put This Card");
+            if(!putterPlayer.isSystem()) {
+                System.out.println("You Can't Put This Card");
+            }
             return false;
         }
 
@@ -49,6 +50,14 @@ public class Game {
      */
     private boolean checkPuttedCard(Card cardToPut, Player putterPlayer) {
         Card middleCard = table.getMiddleCard();
+        if(putterPlayer.getHaveToPut() != null){
+            if(cardToPut.getSign() == putterPlayer.getHaveToPut()){
+                putterPlayer.setHaveToPut(null);
+                return true;
+            } else {
+                return false;
+            }
+        }
         if(cardToPut.getSign() == Sign.wildColor)
             return true;
         if(middleCard.getSign() == cardToPut.getSign())
@@ -122,14 +131,49 @@ public class Game {
      * @return can put or not.
      */
     private boolean checkFirstMiddleCard(Card cardToPutFirst) {
-        return cardToPutFirst.getSign() != Sign.wildDraw && cardToPutFirst.getSign() != Sign.wildColor;
+        return cardToPutFirst.getSign() != Sign.wildDraw && cardToPutFirst.getSign() != Sign.wildColor && cardToPutFirst.getSign() != Sign.draw;
     }
 
-    public void systemPlay() {
-
+    /**
+     * Show score of players when game ends
+     */
+    public void playersScore(){
+        int i = 1;
+        for (Player player:getTable().getPlayers()){
+            int playerScore = 0;
+            for (Card card:player.getCards()){
+                playerScore += card.getPoint();
+            }
+            System.out.println("Score of Player " + i++ + " is : " + playerScore);
+        }
     }
 
+    /**
+     * AI Put a Card
+     *
+     * @param player player turn
+     */
+    public void systemPlay(Player player) {
+        for (Card card:player.getCards()){
+            if(putCard(card, player)){
+                return;
+            }
+        }
+        takeCard(player);
+        putCard(player.getCards().get(player.getCards().size()-1), player);
+    }
+
+    /**
+     * Check End of Game
+     *
+     * @return is game end
+     */
     public boolean endGame() {
+        for (Player player:table.getPlayers()) {
+            if (player.getCards().size() == 0) {
+                return true;
+            }
+        }
         return false;
     }
 

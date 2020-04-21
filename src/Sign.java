@@ -1,4 +1,6 @@
-
+/**
+ * Sign of Cards
+ */
 public enum Sign {
     zero,
     one,

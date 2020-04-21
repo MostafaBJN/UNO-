@@ -1,19 +1,26 @@
 import java.util.ArrayList;
 
 /**
- *
- *
+ * Table of UNO game which manage players and cards
  */
 public class Table {
     private ArrayList<Player> players;
     private ArrayList<Card> cards;
     private Card middleCard;
 
+    /**
+     * Make a new Table
+     */
     public Table (){
         cards = new ArrayList<Card>();
         players = new ArrayList<Player>();
-        for (int i = 0; i < Run.numberOfPlayers; i++)
-            players.add(new Player(i));
+        for (int i = 0; i < Run.numberOfPlayers; i++) {
+            if(Run.systemPlayer && i>0) {
+                players.add(new Player(i, true));
+            } else {
+                players.add(new Player(i, false));
+            }
+        }
         for (int i = 1; i < 20; i++)
             cards.add(new NumberCard(Color.blue,(i/2)));
         for (int i = 1; i < 20; i++)
@@ -52,6 +59,9 @@ public class Table {
             cards.add(new WildDrawCard());
     }
 
+    /**
+     * Print all cards
+     */
     public void print() {
         System.out.println("Middle Card");
         System.out.println(middleCard.getDesign());
@@ -67,6 +77,11 @@ public class Table {
         }
     }
 
+    /**
+     * Print a Player Cards
+     *
+     * @param player who cards printed
+     */
     public void printPlayer(Player player){
         int i = 1;
         for (Card card : player.getCards()) {
@@ -75,20 +90,10 @@ public class Table {
         }
     }
 
-    /**
-     * Getter for Players
-     *
-     * @return Players List
-     */
     public ArrayList<Player> getPlayers() {
         return players;
     }
 
-    /**
-     * Getter for Cards
-     *
-     * @return Cards List
-     */
     public ArrayList<Card> getCards() {
         return cards;
     }
