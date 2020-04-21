@@ -14,6 +14,8 @@ public class Table {
         this.numberOfPlayers = numberOfPlayers;
         cards = new ArrayList<Card>();
         players = new ArrayList<Player>();
+        for (int i = 0; i < numberOfPlayers; i++)
+            players.add(new Player(i));
         for (int i = 1; i < 20; i++)
             cards.add(new NumberCard(Color.blue,(i/2)));
         for (int i = 1; i < 20; i++)
@@ -52,8 +54,20 @@ public class Table {
             cards.add(new WildDrawCard());
     }
 
-    public void g(){
-
+    public void print() {
+        //
+        System.out.println(middleCard.getDesign());
+        int i = 1;
+        for (Player player:players) {
+            System.out.println("Player " + i);
+            for (Card card : player.getCards()) {
+                System.out.println("" + card.getSign() + " " + card.getColor());
+                System.out.println(card.getDesign());
+                i++;
+            }
+            System.out.println();
+            System.out.println();
+        }
     }
 
     /**
